@@ -1,0 +1,45 @@
+DROP TABLE messages;
+CREATE TABLE messages (results VARCHAR2(80));
+
+set serveroutput on
+
+declare
+ v_ename	employees.last_name%TYPE;
+ v_emp_sal	employees.salary%TYPE := 6000;
+
+begin
+
+ select last_name into v_ename from employees where salary = v_emp_sal;
+ insert into messages (results) values (v_ename || ' - ' || v_emp_sal);
+
+exception
+ when no_data_found then
+  insert into messages (results) values ('No employee with a salary of'||v_emp_sal);
+ when too_many_rows then
+  insert into messages (results) values ('More than one employee with a salary of '||v_emp_sal);
+ when others then 
+  insert into messages (results) values ('Some other error or occurred');
+end;
+
+SELECT * FROM messages;
+
+DECLARE  
+   e_childrecord_exists EXCEPTION;
+   PRAGMA EXCEPTION_INIT(e_childrecord_exists, -02292);
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(' Deleting department 40........');
+   delete from departments where department_id=40;
+EXCEPTION
+   WHEN e_childrecord_exists THEN
+   DBMS_OUTPUT.PUT_LINE(' Cannot delete this department. There are employees in this department (child records exist.) ');
+END;
+
+declare
+ ex EXCEPTION;
+ PRAGMA EXCEPTION_INIT (ex, -02292);
+ 
+begin
+ delete from departments where department_id = 40;
+exception
+ when ex then dbms_output.put_line('NO!');
+end;

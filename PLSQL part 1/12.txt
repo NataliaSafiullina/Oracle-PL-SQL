@@ -1,0 +1,1 @@
+EXECUTE emp_pkg_12.add_emp('Samuel','Joplin', 30); -- 1;

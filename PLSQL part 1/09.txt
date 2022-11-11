@@ -1,0 +1,57 @@
+create or replace procedure p_add_job 
+ (fv_job_id jobs.JOB_ID%type,
+  fv_job_name jobs.job_title%type)
+is
+begin
+ insert into jobs (JOB_ID, job_title) values (fv_job_id, fv_job_name);
+ COMMIT;
+end p_add_job;
+
+EXECUTE p_add_job ('IT_DBA', 'Database Administrator')
+SELECT * FROM jobs WHERE job_id = 'IT_DBA';
+EXECUTE p_add_job ('ST_MAN', 'Stock Manager')
+
+create or replace procedure p_upd_job 
+ (fv_job_id jobs.JOB_ID%type,
+  fv_job_name jobs.job_title%type)
+is
+begin
+ update JOBS set job_title = fv_job_name where job_id = fv_job_id;
+ if SQL%NOTFOUND then RAISE_APPLICATION_ERROR (-20222, 'No job updated');
+ end if;
+end p_upd_job;
+
+EXECUTE p_upd_job ('IT_DBA', 'DATA ADMIN');
+select * from jobs where job_id = 'IT_DBA';
+EXECUTE p_upd_job ('NO_J', 'No such ob');
+
+create or replace PROCEDURE p_del_job
+(fv_job_id jobs.job_id%type)
+IS
+BEGIN
+  DELETE FROM jobs WHERE job_id = fv_job_id;
+  if SQL%NOTFOUND then RAISE_APPLICATION_ERROR (-20223, 'No job deleted');
+  end if;
+END p_del_job;
+
+EXECUTE p_del_job('IT_DBA');
+select * from jobs;
+EXECUTE p_del_job('BLA_BLA');
+
+create or replace procedure get_emp
+(fv_emp_id employees.employee_id%type,
+ fv_sal OUT employees.salary%type,
+ fv_job_id OUT employees.job_id%type)
+is
+begin
+ select salary, job_id into fv_sal, fv_job_id from employees where employees.employee_id = fv_emp_id;
+end get_emp;
+
+VARIABLE v_salary NUMBER;
+VARIABLE v_job_id VARCHAR2(30);
+EXECUTE get_emp ('120',:v_salary,:v_job_id);
+PRINT v_salary;
+PRINT v_job_id;
+EXECUTE get_emp ('300',:v_salary,:v_job_id);
+PRINT v_salary;
+PRINT v_job_id;

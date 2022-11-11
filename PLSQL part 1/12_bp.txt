@@ -1,0 +1,92 @@
+create or replace package body EMP_PKG_12 is
+
+-- existing department;
+FUNCTION valid_depid (fv_dep_id employees.department_id%type) 
+    RETURN BOOLEAN IS rv_flag PLS_INTEGER;
+BEGIN
+  SELECT  1
+  INTO    rv_flag
+  FROM    departments
+  WHERE   department_id = fv_dep_id;
+  RETURN  TRUE;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    RETURN FALSE;
+END valid_depid;
+
+-- add employee 1;
+PROCEDURE add_emp (
+ v_first_name employees.first_name%type,
+ v_last_name employees.last_name%type,
+ v_email employees.email%type := 'email',
+ v_jobs employees.job_id%type := 'SA_REP',
+ v_mgr employees.manager_id%type := 145,
+ v_sal employees.salary%type := 1000,
+ v_comm employees.commission_pct%type := 0,
+ v_deptid employees.department_id%type := 30)
+IS
+BEGIN
+  IF valid_depid(v_deptid) THEN
+   INSERT INTO employees(employee_id, first_name, last_name, email, job_id, manager_id, hire_date, salary, commission_pct, department_id)
+   VALUES (employees_seq.NEXTVAL, v_first_name, v_last_name, v_email, v_jobs, v_mgr, TRUNC(SYSDATE), v_sal, v_comm, v_deptid);
+ ELSE
+   RAISE_APPLICATION_ERROR (-20222, 'Not exist department');
+ END IF;
+END add_emp;
+
+-- add employee 1;
+PROCEDURE add_emp (
+ v_first_name employees.first_name%type,
+ v_last_name employees.last_name%type,
+ v_deptid employees.department_id%type := 30)
+IS
+ vl_email employees.email%type;
+BEGIN
+ vl_email := upper(substr(v_first_name,1,1)||substr(v_last_name,1,7));
+ add_emp(v_first_name,v_last_name,vl_email,v_deptid=>v_deptid);
+END add_emp;
+
+-- employee's salary and job;
+procedure get_emp
+(fv_emp_id employees.employee_id%type,
+ fv_sal OUT employees.salary%type,
+ fv_job_id OUT employees.job_id%type)
+is
+begin
+ select salary, job_id into fv_sal, fv_job_id from employees where employees.employee_id = fv_emp_id;
+end get_emp;
+
+function get_employee (
+ fv_emp_id in employees.employee_id%type)
+ return employees%rowtype is cur_emp employees%rowtype;
+begin
+   SELECT * INTO cur_emp
+   FROM employees
+   WHERE employee_id = fv_emp_id;
+   
+   RETURN cur_emp;
+end get_employee;
+
+function get_employee (
+ fv_family_name in employees.last_name %type)
+ return employees%rowtype is cur_emp employees%rowtype;
+begin
+   SELECT * INTO cur_emp
+   FROM employees
+   WHERE last_name = fv_family_name;
+   
+   RETURN cur_emp;
+end get_employee;
+
+PROCEDURE print_employee(p_rec_emp employees%rowtype) IS
+  BEGIN
+    DBMS_OUTPUT.PUT_LINE(p_rec_emp.department_id ||' '|| 
+                         p_rec_emp.employee_id||' '||
+                         p_rec_emp.first_name||' '||
+                         p_rec_emp.last_name||' '||
+                         p_rec_emp.job_id||' '||
+                         p_rec_emp.salary);
+  END;
+
+
+end EMP_PKG_12;

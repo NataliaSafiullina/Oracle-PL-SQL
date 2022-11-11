@@ -1,0 +1,35 @@
+create or replace package EMP_PKG_12 is
+
+PROCEDURE add_emp (
+ v_first_name employees.first_name%type,
+ v_last_name employees.last_name%type,
+ v_email employees.email%type := 'email',
+ v_jobs employees.job_id%type := 'SA_REP',
+ v_mgr employees.manager_id%type := 145,
+ v_sal employees.salary%type := 1000,
+ v_comm employees.commission_pct%type := 0,
+ v_deptid employees.department_id%type := 30);
+
+PROCEDURE add_emp (
+ v_first_name employees.first_name%type,
+ v_last_name employees.last_name%type,
+ v_deptid employees.department_id%type := 30);
+
+procedure get_emp
+(fv_emp_id employees.employee_id%type,
+ fv_sal OUT employees.salary%type,
+ fv_job_id OUT employees.job_id%type);
+
+PROCEDURE print_employee(p_rec_emp employees%rowtype);
+
+function get_employee (
+ fv_emp_id in employees.employee_id%type)
+ return employees%rowtype;
+
+function get_employee (
+ fv_family_name in employees.last_name %type)
+ return employees%rowtype;
+ 
+end EMP_PKG_12;
+/
+SHOW ERRORS

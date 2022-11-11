@@ -1,0 +1,6 @@
+EXECUTE job_pack.p_add_job ('IT_SYSAN', 'Systems Analyst');
+EXECUTE job_pack.p_upd_job ('IT_DBA', 'DATA ADMIN');
+EXECUTE job_pack.p_del_job('IT_DBA');
+
+EXECUTE emp_pkg.add_emp(v_first_name=>'Jane', v_last_name=>'Harris', v_deptid=> 15);
+EXECUTE emp_pkg.add_emp(v_first_name=>'David', v_last_name=>'Smith', v_email=>'AGENT_SMITH', v_deptid=> 80);

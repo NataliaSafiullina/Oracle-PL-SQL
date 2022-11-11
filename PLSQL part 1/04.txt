@@ -1,0 +1,34 @@
+set serveroutput on
+
+VARIABLE rows_inserted VARCHAR2(30);
+
+declare 
+ v_max_deptno	NUMBER;
+ v_dept_name departments.department_name%TYPE;
+ v_dept_id NUMBER;
+begin
+ SELECT MAX(department_id)
+ INTO v_max_deptno
+ FROM departments;
+ 
+ dbms_output.put_line('The maximum department_id is:'||v_max_deptno	);
+ 
+ v_dept_name := 'Education';
+ v_dept_id := v_max_deptno + 10;
+ 
+ INSERT INTO departments (department_id, department_name) VALUES (v_dept_id, v_dept_name);
+ :rows_inserted := (SQL%ROWCOUNT ||' row inserted');
+
+ dbms_output.put_line(''||:rows_inserted);
+end;
+
+declare 
+ v_new_location_id NUMBER;
+begin
+ v_new_location_id := 3000;
+ 
+ UPDATE departments
+ SET LOCATION_ID = v_new_location_id
+ WHERE department_id = 280;
+ 
+end;

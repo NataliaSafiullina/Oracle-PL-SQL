@@ -1,0 +1,20 @@
+create or replace package EMP_PKG is
+
+PROCEDURE add_emp (
+ v_first_name employees.first_name%type,
+ v_last_name employees.last_name%type,
+ v_email employees.email%type := 'email',
+ v_jobs employees.job_id%type := 'SA_REP',
+ v_mgr employees.manager_id%type := 145,
+ v_sal employees.salary%type := 1000,
+ v_comm employees.commission_pct%type := 0,
+ v_deptid employees.department_id%type := 30);
+
+procedure get_emp
+(fv_emp_id employees.employee_id%type,
+ fv_sal OUT employees.salary%type,
+ fv_job_id OUT employees.job_id%type);
+ 
+end EMP_PKG;
+/
+SHOW ERRORS

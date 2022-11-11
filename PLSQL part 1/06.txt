@@ -1,0 +1,49 @@
+set serveroutput on
+
+declare 
+ v_countryid varchar2(20) := 'CA';
+ v_country_record countries%ROWTYPE;
+begin
+ SELECT * INTO v_country_record FROM countries WHERE  country_id = v_countryid;
+ dbms_output.put_line('Country_id: '|| v_country_record.country_id);
+ dbms_output.put_line('Country_name: '|| v_country_record.country_name);
+ dbms_output.put_line('Region: '|| v_country_record.region_id);
+end;
+
+declare
+ TYPE dep_table_type IS TABLE OF 
+  departments.department_name%TYPE
+  INDEX BY PLS_INTEGER;
+  dep_table dep_table_type;
+begin
+ FOR i IN 1..10 LOOP
+  SELECT department_name INTO dep_table(i) FROM departments WHERE department_id = (i*10);
+ END LOOP;
+ 
+ FOR i IN dep_table.FIRST..dep_table.LAST 
+  LOOP
+     DBMS_OUTPUT.PUT_LINE(dep_table(i));
+  END LOOP;
+
+end;
+
+declare
+ TYPE dep_table_type IS TABLE OF 
+  departments%ROWTYPE
+  INDEX BY PLS_INTEGER;
+  dep_table dep_table_type;
+begin
+ FOR i IN 1..10 LOOP
+  SELECT * INTO dep_table(i) FROM departments WHERE department_id = (i*10);
+ END LOOP;
+ 
+ FOR i IN dep_table.FIRST..dep_table.LAST 
+  LOOP
+     DBMS_OUTPUT.PUT_LINE ('Department Number: ' || dep_table(i).department_id
+     || ' Department Name: ' || dep_table(i).department_name 
+     || ' Manager Id: '||  dep_table(i).manager_id
+     || ' Location Id: ' || dep_table(i).location_id);
+
+  END LOOP;
+
+end;

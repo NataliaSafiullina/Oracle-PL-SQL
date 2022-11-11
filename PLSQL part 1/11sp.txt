@@ -1,0 +1,8 @@
+create or replace package JOB_PACK is
+procedure p_add_job (fv_job_id jobs.JOB_ID%type, fv_job_name jobs.job_title%type);
+procedure p_upd_job (fv_job_id jobs.JOB_ID%type, fv_job_name jobs.job_title%type);
+procedure p_del_job (fv_job_id jobs.job_id%type);
+function get_job (fv_job_id jobs.job_id%type) return jobs.job_title%type;
+end JOB_PACK;
+/
+SHOW ERRORS

@@ -1,0 +1,81 @@
+set serveroutput on
+
+declare 
+
+begin
+ FOR i IN 1..10 LOOP
+  CONTINUE WHEN i = 6 OR i = 8;
+   dbms_output.put_line(''||i);
+  /*INSERT INTO Messages (,) VALUES(i);*/
+ END LOOP;
+end;
+
+
+declare 
+ v_salary NUMBER;
+ v_quan_stars NUMBER;
+ v_stars VARCHAR2(30);
+begin
+ SELECT salary INTO v_salary FROM employees WHERE employee_id = 176;
+
+ v_quan_stars := ROUND(v_salary/1000);
+ dbms_output.put_line('Quan_stars = '|| v_quan_stars);
+
+ FOR i IN 1..v_quan_stars LOOP
+  v_stars := v_stars || '*';
+ END LOOP;
+
+ dbms_output.put_line('Stars'|| v_stars);
+ /*
+ UPDATE employees
+ SET startsvarchar = v_stars
+ WHERE employee_id = 176;
+ */
+end;
+
+-----------------
+
+DROP TABLE messages;
+CREATE TABLE messages (results VARCHAR2(80));
+
+DROP TABLE emp;
+CREATE TABLE emp AS SELECT * FROM employees;
+ALTER TABLE emp  ADD stars	VARCHAR2(50);
+
+set serveroutput on
+
+declare 
+begin
+
+  FOR i IN 1..10 LOOP
+  CONTINUE WHEN i = 6 OR i = 8;
+   dbms_output.put_line(''||i);
+  INSERT INTO Messages (results) VALUES(i);
+ END LOOP;
+end;
+
+declare 
+ v_salary NUMBER;
+ v_quan_stars NUMBER;
+ v_stars VARCHAR2(30);
+begin
+ SELECT salary INTO v_salary FROM employees WHERE employee_id = 176;
+
+ v_quan_stars := ROUND(v_salary/1000);
+ dbms_output.put_line('Quan_stars = '|| v_quan_stars);
+
+ FOR i IN 1..v_quan_stars LOOP
+  v_stars := v_stars || '*';
+ END LOOP;
+
+ dbms_output.put_line('Stars'|| v_stars);
+ 
+ UPDATE emp
+ SET stars = v_stars
+ WHERE employee_id = 176;
+ 
+ SELECT * FROM emp
+ 
+end;
+
+

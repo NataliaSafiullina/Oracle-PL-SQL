@@ -1,0 +1,40 @@
+create or replace package body JOB_PACK is
+--;
+function get_job (fv_job_id jobs.job_id%type)
+return jobs.job_title%type IS rv_title jobs.job_title%type;
+begin
+ select job_title into rv_title from jobs where job_id = fv_job_id;
+ return rv_title;
+end get_job;
+--;
+procedure p_add_job 
+ (fv_job_id jobs.JOB_ID%type,
+  fv_job_name jobs.job_title%type)
+is
+begin
+ insert into jobs (JOB_ID, job_title) values (fv_job_id, fv_job_name);
+ COMMIT;
+end p_add_job;
+--;
+procedure p_upd_job 
+ (fv_job_id jobs.JOB_ID%type,
+  fv_job_name jobs.job_title%type)
+is
+begin
+ update JOBS set job_title = fv_job_name where job_id = fv_job_id;
+ if SQL%NOTFOUND then RAISE_APPLICATION_ERROR (-20222, 'No job updated');
+ end if;
+end p_upd_job;
+--;
+procedure p_del_job
+(fv_job_id jobs.job_id%type)
+is
+begin
+  delete from jobs where job_id = fv_job_id;
+  if SQL%NOTFOUND then RAISE_APPLICATION_ERROR (-20223, 'No job deleted');
+  end if;
+end p_del_job;
+--;
+end JOB_PACK;
+/
+SHOW ERRORS
