@@ -1,2 +1,2 @@
 # Oracle-PL-SQL
-PL/SQL code my examples
+PL/SQL code examples
